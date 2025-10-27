@@ -1,9 +1,7 @@
 package com.deocoe.springbootjwtauthapi.service;
 
-
 import com.deocoe.springbootjwtauthapi.model.Usuario;
 import com.deocoe.springbootjwtauthapi.repository.UsuarioRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +13,9 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario registrarUsuario(String username, String password) {
