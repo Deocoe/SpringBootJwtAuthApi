@@ -1,5 +1,7 @@
 package com.deocoe.springbootjwtauthapi.service;
 
+import com.deocoe.springbootjwtauthapi.dto.RegisterRequestDTO;
+import com.deocoe.springbootjwtauthapi.dto.UsuarioResponseDTO;
 import com.deocoe.springbootjwtauthapi.model.Usuario;
 import com.deocoe.springbootjwtauthapi.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +20,11 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Usuario registrarUsuario(String username, String password) {
-        String senhaCriptografada = passwordEncoder.encode(password);
-        Usuario usuario = new Usuario(username, senhaCriptografada);
-        return usuarioRepository.save(usuario);
+    public UsuarioResponseDTO registrarUsuario(RegisterRequestDTO registerRequest) {
+        String senhaCriptografada = passwordEncoder.encode(registerRequest.getPassword());
+        Usuario usuario = new Usuario(registerRequest.getUsername(), senhaCriptografada);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        return new UsuarioResponseDTO(usuarioSalvo);
     }
 
     public Optional<Usuario> buscarPorUsername(String username) {

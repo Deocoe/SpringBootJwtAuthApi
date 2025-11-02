@@ -1,6 +1,8 @@
 package com.deocoe.springbootjwtauthapi.controller;
 
-import com.deocoe.springbootjwtauthapi.model.Usuario;
+import com.deocoe.springbootjwtauthapi.dto.LoginRequestDTO;
+import com.deocoe.springbootjwtauthapi.dto.RegisterRequestDTO;
+import com.deocoe.springbootjwtauthapi.dto.UsuarioResponseDTO;
 import com.deocoe.springbootjwtauthapi.security.JwtUtil;
 import com.deocoe.springbootjwtauthapi.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +30,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
-        Usuario usuario = usuarioService.registrarUsuario(request.get("username"), request.get("password"));
-        return ResponseEntity.ok(usuario);
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequest) {
+        UsuarioResponseDTO usuarioResponse = usuarioService.registrarUsuario(registerRequest);
+        return ResponseEntity.ok(usuarioResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         try {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    request.get("username"),
-                    request.get("password")
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword()
             );
 
             authenticationManager.authenticate(authToken);
 
-            String token = JwtUtil.generateToken(request.get("username"));
+            String token = JwtUtil.generateToken(loginRequest.getUsername());
             return ResponseEntity.ok(Map.of("token", token));
 
         } catch (BadCredentialsException e) {
